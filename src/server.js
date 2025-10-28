@@ -1,8 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import pinoHttp from 'pino-http';
+import cookieParser from 'cookie-parser';
 import logger from './utils/logger.js';
-import contactsRouter from './routes/contacts.js';
+import router from './routes/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
@@ -11,14 +12,15 @@ export const setupServer = () => {
 
   app.use(cors());
   app.use(express.json());
+  app.use(cookieParser());
   app.use(pinoHttp({ logger }));
 
   //* temp
-  app.get('/', (req, res) => {
-    res.redirect(307, '/api');
-  });
   app.get('/contacts', (req, res) => {
     res.redirect(307, '/api/contacts');
+  });
+  app.get('/', (req, res) => {
+    res.redirect(307, '/api');
   });
 
   app.get('/api', (req, res) => {
@@ -27,7 +29,7 @@ export const setupServer = () => {
     });
   });
 
-  app.use('/api/contacts', contactsRouter);
+  app.use('/api', router);
   app.use(notFoundHandler);
   app.use(errorHandler);
 
@@ -36,4 +38,3 @@ export const setupServer = () => {
     logger.info(`🟢 Server is running on port ${PORT}`);
   });
 };
-
