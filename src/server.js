@@ -6,6 +6,7 @@ import logger from './utils/logger.js';
 import router from './routes/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import { UPLOAD_DIR } from './constants/index.js';
 
 export const setupServer = () => {
   const app = express();
@@ -28,7 +29,7 @@ export const setupServer = () => {
       message: 'Hi there!',
     });
   });
-
+  app.use('/uploads', express.static(UPLOAD_DIR));
   app.use('/api', router);
   app.use(notFoundHandler);
   app.use(errorHandler);

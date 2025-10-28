@@ -23,18 +23,23 @@ const contactSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    
+
     contactType: {
       type: String,
       enum: ['work', 'home', 'personal'],
       required: true,
       default: 'personal',
     },
-    
-    userId: { 
-      type: Schema.Types.ObjectId, 
-      ref: 'users', required: true 
-    }, 
+
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'users',
+      required: true,
+    },
+
+    photo: {
+      type: String,
+    },
   },
   {
     timestamps: true,
@@ -42,4 +47,3 @@ const contactSchema = new Schema(
 );
 
 export const Contact = model('Contact', contactSchema);
-
