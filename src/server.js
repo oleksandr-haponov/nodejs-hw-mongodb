@@ -12,11 +12,19 @@ export const setupServer = () => {
   app.use(pinoHttp({ logger }));
 
   //* temp
-  app.get('/', (req, res) => {
-    res.redirect(307, '/api');
-  });
-  app.get('/contacts', (req, res) => {
-    res.redirect(307, '/api/contacts');
+  // app.get('/', (req, res) => {
+  //   res.redirect(307, '/api');
+  // });
+  // app.get('/contacts', (req, res) => {
+  //   res.redirect(307, '/api/contacts');
+  // });
+
+  app.use((req, res, next) => {
+    if (!req.path.startsWith('/api')) {
+      req.log.info(`Redirecting ${req.originalUrl} -> /api${req.originalUrl}`);
+      return res.redirect(307, `/api${req.originalUrl}`);
+    }
+    next();
   });
 
   app.use('/api/contacts', contactsRouter);
