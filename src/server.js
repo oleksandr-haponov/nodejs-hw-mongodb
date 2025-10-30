@@ -15,12 +15,12 @@ export const setupServer = () => {
   app.use(cookieParser());
   app.use(pinoHttp({ logger }));
 
-  //* temp
-  app.get('/contacts', (req, res) => {
-    res.redirect(307, '/api/contacts');
-  });
-  app.get('/', (req, res) => {
-    res.redirect(307, '/api');
+  app.use((req, res, next) => {
+    if (!req.path.startsWith('/api')) {
+      req.log.info(`Redirecting ${req.originalUrl} -> /api${req.originalUrl}`);
+      return res.redirect(307, `/api${req.originalUrl}`);
+    }
+    next();
   });
 
   app.get('/api', (req, res) => {
