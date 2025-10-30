@@ -1,0 +1,109 @@
+summary: Get a list of user contacts
+description: Returns all contacts belonging to the authorized user. Supports pagination, sorting, and filtering.
+operationId: getContacts
+tags:
+  - Contacts
+security:
+  - bearerAuth: []
+parameters:
+  - name: page
+    in: query
+    description: Page number (pagination)
+    required: false
+    schema:
+      type: integer
+      example: 1
+  - name: perPage
+    in: query
+    description: Number of contacts per page
+    required: false
+    schema:
+      type: integer
+      example: 10
+  - name: sortBy
+    in: query
+    description: Field to sort by (e.g. name or email)
+    required: false
+    schema:
+      type: string
+      example: name
+  - name: sortOrder
+    in: query
+    description: Sort direction (asc or desc)
+    required: false
+    schema:
+      type: string
+      enum: [asc, desc]
+      example: asc
+  - name: contactType
+    in: query
+    description: Contact type for filtering
+    required: false
+    schema:
+      type: string
+      enum: [work, home, personal]
+      example: personal
+  - name: isFavourite
+    in: query
+    description: Filter by favorite contacts
+    required: false
+    schema:
+      type: boolean
+      example: true
+responses:
+  '200':
+    description: List of contacts
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully found contacts!
+            data:
+              type: array
+              items:
+                $ref: ../../components/schemas/contact.yaml
+  '401':
+    description: Unauthorized – missing or invalid token
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 401
+            message:
+              type: string
+              example: Unauthorized access
+  '404':
+    description: Contacts not found
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: No contacts found for this user
+  '500':
+    description: Internal server error
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 500
+            message:
+              type: string
+              example: Something went wrong

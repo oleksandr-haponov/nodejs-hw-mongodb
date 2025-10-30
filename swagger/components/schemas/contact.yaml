@@ -1,0 +1,61 @@
+type: object
+description: Модель контакту користувача
+properties:
+  _id:
+    type: string
+    description: Унікальний ідентифікатор контакту
+    example: 670fd2b7e4c3a79b8a9a0a41
+
+  name:
+    type: string
+    description: Ім’я контакту
+    example: John Doe
+
+  phoneNumber:
+    type: string
+    description: Номер телефону
+    example: '+380971234567'
+
+  email:
+    type: string
+    description: Електронна пошта
+    example: john.doe@example.com
+
+  isFavourite:
+    type: boolean
+    description: Позначка улюбленого контакту
+    example: true
+
+  contactType:
+    type: string
+    description: Тип контакту
+    enum: [work, home, personal]
+    example: personal
+
+  userId:
+    type: string
+    description: ID користувача, якому належить контакт
+    example: 670fd15ae4c3a79b8a9a0a2b
+
+  photo:
+    type: [string, 'null']
+    description: Посилання на зображення контакту
+    example: https://res.cloudinary.com/demo/image/upload/v1731543210/contact-photo.jpg
+
+  createdAt:
+    type: string
+    format: date-time
+    description: Дата створення контакту
+    example: 2025-10-14T13:45:22.123Z
+
+  updatedAt:
+    type: string
+    format: date-time
+    description: Дата останнього оновлення контакту
+    example: 2025-10-14T15:03:44.821Z
+
+required:
+  - name
+  - phoneNumber
+  - contactType
+  - userId

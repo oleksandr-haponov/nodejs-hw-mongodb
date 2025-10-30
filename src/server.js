@@ -2,10 +2,14 @@ import express from 'express';
 import cors from 'cors';
 import pinoHttp from 'pino-http';
 import cookieParser from 'cookie-parser';
+
 import logger from './utils/logger.js';
 import router from './routes/index.js';
+
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
+
 import { UPLOAD_DIR } from './constants/index.js';
 
 export const setupServer = () => {
@@ -16,12 +20,12 @@ export const setupServer = () => {
   app.use(cookieParser());
   app.use(pinoHttp({ logger }));
 
-  //* temp
-  app.get('/contacts', (req, res) => {
-    res.redirect(307, '/api/contacts');
-  });
-  app.get('/', (req, res) => {
-    res.redirect(307, '/api');
+  app.use((req, res, next) => {
+    if (!req.path.startsWith('/api')) {
+      req.log.info(`Redirecting ${req.originalUrl} -> /api${req.originalUrl}`);
+      return res.redirect(307, `/api${req.originalUrl}`);
+    }
+    next();
   });
 
   app.get('/api', (req, res) => {
@@ -29,7 +33,9 @@ export const setupServer = () => {
       message: 'Hi there!',
     });
   });
+
   app.use('/uploads', express.static(UPLOAD_DIR));
+  app.use('/api/api-docs', swaggerDocs());
   app.use('/api', router);
   app.use(notFoundHandler);
   app.use(errorHandler);
